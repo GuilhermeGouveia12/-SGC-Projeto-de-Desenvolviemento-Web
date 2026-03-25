@@ -1,1 +1,1 @@
-# -SGC-Projeto-de-Desenvolviemento-Web
+# SGC-Projeto-de-Desenvolviemento-Web
