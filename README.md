@@ -51,7 +51,20 @@ Tabelas principais:
 * itens_venda
 
 ---
+## 5. Padrões de Projeto Escolhidos
 
+| Padrão                              | Aplicação no Projeto                                                                 |
+|-------------------------------------|--------------------------------------------------------------------------------------|
+| **MVT (Model-View-Template)**       | Separação entre dados, lógica e apresentação, padrão nativo do Django                |
+| **Repository Pattern (via ORM)**    | Acesso ao banco de dados centralizado nos Models do Django                           |
+| **Token-based Authentication (JWT)**| Autenticação stateless, sem necessidade de sessões armazenadas no servidor           |
+| **REST (Representational State Transfer)** | Comunicação padronizada entre frontend e backend via HTTP/JSON                |
+
+### Justificativa das Tecnologias
+
+A escolha do **Django** em conjunto com o **Django REST Framework** se justifica pela maturidade do ecossistema, alta produtividade proporcionada pelo ORM e suporte nativo a funcionalidades essenciais como serialização de dados, autenticação e paginação de resultados.
+
+O **PostgreSQL** foi selecionado como sistema de gerenciamento de banco de dados devido à sua robustez, suporte avançado a transações e conformidade com padrões relacionais, garantindo a integridade dos dados no contexto de vendas.
 ---
 
 ## 7. Autores
