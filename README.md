@@ -52,14 +52,6 @@ Tabelas principais:
 
 ---
 
-## 6. Execução do Projeto
-
-```bash
-git clone <repositorio>
-cd projeto
-python manage.py runserver
-```
-
 ---
 
 ## 7. Autor
