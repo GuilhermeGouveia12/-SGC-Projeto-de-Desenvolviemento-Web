@@ -51,7 +51,7 @@ Tabelas principais:
 * itens_venda
 
 ---
-## 5. Padrões de Projeto Escolhidos
+## 6. Padrões de Projeto Escolhidos
 
 | Padrão                              | Aplicação no Projeto                                                                 |
 |-------------------------------------|--------------------------------------------------------------------------------------|
