@@ -56,5 +56,5 @@ Tabelas principais:
 
 ## 7. Autores
 
-Guilherme Gouveia Dalla Mutta
-Arthur Grangeiro Botelho Henrique Tomaz
+* Guilherme Gouveia Dalla Mutta
+* Arthur Grangeiro Botelho Henrique Tomaz
