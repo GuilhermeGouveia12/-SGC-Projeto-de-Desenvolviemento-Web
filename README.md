@@ -1,73 +1,141 @@
-# SGC-Projeto-de-Desenvolviemento-Web
+# SGC — Sistema de Gestão Comercial
 
-# Sistema de Gestão Comercial
+Sistema web para gestão de uma loja de informática, com controle de clientes, produtos, vendas e relatórios.
+
+---
+
+## Sumário
+
+1. [Descrição](#1-descrição)
+2. [Tecnologias](#2-tecnologias)
+3. [Arquitetura](#3-arquitetura)
+4. [Pré-requisitos](#4-pré-requisitos)
+5. [Como executar](#5-como-executar)
+6. [Endpoints da API](#6-endpoints-da-api)
+7. [Testes](#7-testes)
+8. [Autores](#8-autores)
+
+---
 
 ## 1. Descrição
 
-Sistema web desenvolvido para gestão de uma loja de informática, permitindo o controle de clientes, produtos, vendas e relatórios.
+O SGC apoia o ciclo comercial completo de uma loja de informática: cadastro de clientes e produtos, registro de vendas com atualização automática de estoque, autenticação por perfil (ADMIN/FUNCIONARIO) via JWT e relatórios de vendas com gráfico anual.
 
 ---
 
-## 2. Funcionalidades
+## 2. Tecnologias
 
-* Cadastro, edição e remoção de clientes
-* Validação de CPF único
-* Cadastro e controle de produtos
-* Controle de estoque
-* Registro de vendas com cálculo automático
-* Atualização de estoque após venda
-* Autenticação de usuários
-* Geração de relatórios de vendas
-
----
-
-## 3. Tecnologias Utilizadas
-
-* Linguagem: Python
-* Framework: Django
-* Banco de Dados: PostgreSQL
-* Versionamento: GitHub
+| Camada | Tecnologia |
+|---|---|
+| Linguagem | Python 3.10+ |
+| Framework Web | Django 4.2 |
+| API REST | Django REST Framework 3.15 |
+| Autenticação | SimpleJWT |
+| Banco de Dados | PostgreSQL |
+| Frontend | HTML + Bootstrap 5 + Chart.js |
+| Versionamento | Git / GitHub |
 
 ---
 
-## 4. Arquitetura
+## 3. Arquitetura
 
-O sistema segue o padrão MVT (Model-View-Template), organizado em:
+O sistema segue o padrão **MVT** do Django com uma camada adicional de **API REST**:
 
-* Model: manipulação de dados
-* View: regras de negócio
-* Template: interface do usuário
+```
+Interface Web (Templates Bootstrap)
+        ↕ HTTP / JSON
+    API REST (Django REST Framework)
+    Autenticação JWT (SimpleJWT)
+        ↕
+  Camada de Negócio (Views + Serializers)
+  Exceções personalizadas + handler global
+        ↕
+    Models (ORM Django)
+        ↕
+      PostgreSQL
+```
+
+**Padrões utilizados:** MVT, Repository Pattern via ORM, Token-based Auth (JWT), REST.
 
 ---
 
-## 5. Banco de Dados
+## 4. Pré-requisitos
 
-Tabelas principais:
-
-* usuarios
-* clientes
-* produtos
-* vendas
-* itens_venda
+- Python 3.10+
+- PostgreSQL instalado e em execução
+- Git
 
 ---
-## 6. Padrões de Projeto Escolhidos
 
-| Padrão                              | Aplicação no Projeto                                                                 |
-|-------------------------------------|--------------------------------------------------------------------------------------|
-| **MVT (Model-View-Template)**       | Separação entre dados, lógica e apresentação, padrão nativo do Django                |
-| **Repository Pattern (via ORM)**    | Acesso ao banco de dados centralizado nos Models do Django                           |
-| **Token-based Authentication (JWT)**| Autenticação stateless, sem necessidade de sessões armazenadas no servidor           |
-| **REST (Representational State Transfer)** | Comunicação padronizada entre frontend e backend via HTTP/JSON                |
+## 5. Como executar
 
-### Justificativa das Tecnologias
+```bash
+# 1. Clonar o repositório
+git clone <url-do-repositorio>
+cd sgc
 
-A escolha do **Django** em conjunto com o **Django REST Framework** se justifica pela maturidade do ecossistema, alta produtividade proporcionada pelo ORM e suporte nativo a funcionalidades essenciais como serialização de dados, autenticação e paginação de resultados.
+# 2. Criar e ativar ambiente virtual
+python -m venv venv
+source venv/bin/activate      # Linux/macOS
+venv\Scripts\activate         # Windows
 
-O **PostgreSQL** foi selecionado como sistema de gerenciamento de banco de dados devido à sua robustez, suporte avançado a transações e conformidade com padrões relacionais, garantindo a integridade dos dados no contexto de vendas.
+# 3. Instalar dependências
+pip install -r requirements.txt
+
+# 4. Configurar variáveis de ambiente
+cp .env.example .env
+# Edite .env com suas credenciais do banco
+
+# 5. Criar o banco no PostgreSQL
+# psql -U postgres -c "CREATE DATABASE sgc;"
+
+# 6. Aplicar migrações
+python manage.py migrate
+
+# 7. Criar superusuário
+python manage.py createsuperuser
+
+# 8. Iniciar o servidor
+python manage.py runserver
+```
+
+Acesse a interface web em: `http://localhost:8000/web/`
+
 ---
 
-## 7. Autores
+## 6. Endpoints da API
 
-* Guilherme Gouveia Dalla Mutta
-* Arthur Grangeiro Botelho Henrique Tomaz
+Todas as rotas (exceto `/auth/login`) exigem `Authorization: Bearer <token>`.
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| POST | `/auth/login` | Login; retorna access + refresh token |
+| POST | `/auth/refresh` | Renova o access token |
+| GET / POST | `/clientes/` | Listar / criar clientes |
+| GET / PUT / DELETE | `/clientes/{id}/` | Detalhar / editar / remover cliente |
+| GET / POST | `/produtos/` | Listar / criar produtos |
+| GET / PUT / DELETE | `/produtos/{id}/` | Detalhar / editar / remover produto |
+| GET | `/produtos/estoque-baixo/` | Produtos abaixo do estoque mínimo |
+| GET / POST | `/vendas/` | Listar / registrar vendas |
+| GET | `/vendas/{id}/` | Detalhar venda |
+| GET | `/vendas/relatorio/periodo/` | Relatório por período (`?data_inicio=&data_fim=`) |
+| GET | `/vendas/relatorio/mensal/` | Dados mensais para gráfico (`?ano=2025`) |
+
+---
+
+## 7. Testes
+
+```bash
+python manage.py test apps.clientes apps.produtos apps.vendas
+```
+
+Os testes cobrem: criação, validação de CPF duplicado, CPF inválido, preço negativo, estoque insuficiente, venda sem itens, atualização de estoque após venda e proteção de rotas sem autenticação.
+
+---
+
+## 8. Autores
+
+- Guilherme Gouveia Dalla Mutta
+- Arthur Grangeiro Botelho Henrique Tomaz
+
+Disciplina: Desenvolvimento Web
