@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h4 class="mb-4">Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted small">Clientes</div>
+      <div class="fs-3 fw-bold">{{ total_clientes }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted small">Produtos ativos</div>
+      <div class="fs-3 fw-bold">{{ total_produtos }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted small">Total de vendas</div>
+      <div class="fs-3 fw-bold">{{ total_vendas }}</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card p-3">
+      <div class="text-muted small">Faturamento</div>
+      <div class="fs-3 fw-bold">R$ {{ faturamento }}</div>
+    </div>
+  </div>
+</div>
+{% if estoque_baixo %}
+<div class="alert alert-warning">
+  <i class="bi bi-exclamation-triangle me-2"></i>
+  <strong>{{ estoque_baixo }}</strong> produto(s) com estoque zerado.
+  <a href="{% url 'web-produtos-list' %}" class="alert-link">Ver produtos</a>
+</div>
+{% endif %}
+{% endblock %}

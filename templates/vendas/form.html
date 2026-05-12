@@ -1,0 +1,102 @@
+{% extends 'base/base.html' %}
+{% block title %}Nova Venda{% endblock %}
+{% block content %}
+<h4 class="mb-4">Nova Venda</h4>
+<div class="card p-4">
+  <form method="post" id="form-venda">
+    {% csrf_token %}
+    <div class="mb-3" style="max-width:400px;">
+      <label class="form-label">Cliente</label>
+      <select name="cliente_id" class="form-select" required>
+        <option value="">Selecione um cliente...</option>
+        {% for c in clientes %}
+          <option value="{{ c.id }}">{{ c.nome }} — {{ c.cpf }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <h6 class="mt-4 mb-2">Itens da venda</h6>
+    <div id="itens-container">
+      <div class="row g-2 align-items-end mb-2 item-row">
+        <div class="col-md-6">
+          <label class="form-label small">Produto</label>
+          <select name="produto_id[]" class="form-select form-select-sm produto-select" required>
+            <option value="">Selecione...</option>
+            {% for p in produtos %}
+              <option value="{{ p.id }}" data-preco="{{ p.preco }}" data-estoque="{{ p.qtd_estoque }}">
+                {{ p.nome }} — R$ {{ p.preco }} (estoque: {{ p.qtd_estoque }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Quantidade</label>
+          <input type="number" name="quantidade[]" class="form-control form-control-sm" min="1" value="1" required>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Subtotal</label>
+          <input type="text" class="form-control form-control-sm subtotal" readonly placeholder="R$ 0,00">
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-outline-danger btn-sm btn-remover">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline-secondary btn-sm mt-2" id="btn-add-item">+ Adicionar item</button>
+
+    <div class="mt-3">
+      <strong>Total estimado: R$ <span id="total-geral">0,00</span></strong>
+    </div>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-primary">Registrar venda</button>
+      <a href="{% url 'web-vendas-list' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const primeiraLinha = document.querySelector('.item-row');
+
+  function calcularSubtotal(row) {
+    const select = row.querySelector('.produto-select');
+    const qty    = parseFloat(row.querySelector('input[name="quantidade[]"]').value) || 0;
+    const preco  = parseFloat(select.selectedOptions[0]?.dataset.preco) || 0;
+    const sub    = (preco * qty).toFixed(2);
+    row.querySelector('.subtotal').value = 'R$ ' + sub;
+    atualizarTotal();
+  }
+
+  function atualizarTotal() {
+    let total = 0;
+    document.querySelectorAll('.subtotal').forEach(i => {
+      total += parseFloat(i.value.replace('R$ ', '')) || 0;
+    });
+    document.getElementById('total-geral').textContent = total.toFixed(2);
+  }
+
+  function bindRow(row) {
+    row.querySelector('.produto-select').addEventListener('change', () => calcularSubtotal(row));
+    row.querySelector('input[name="quantidade[]"]').addEventListener('input', () => calcularSubtotal(row));
+    row.querySelector('.btn-remover').addEventListener('click', () => {
+      if (document.querySelectorAll('.item-row').length > 1) {
+        row.remove(); atualizarTotal();
+      }
+    });
+  }
+
+  bindRow(primeiraLinha);
+
+  document.getElementById('btn-add-item').addEventListener('click', () => {
+    const nova = primeiraLinha.cloneNode(true);
+    nova.querySelector('input[name="quantidade[]"]').value = 1;
+    nova.querySelector('.subtotal').value = '';
+    nova.querySelector('.produto-select').selectedIndex = 0;
+    document.getElementById('itens-container').appendChild(nova);
+    bindRow(nova);
+  });
+</script>
+{% endblock %}
