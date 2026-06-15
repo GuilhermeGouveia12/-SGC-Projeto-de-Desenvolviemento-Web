@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
-from apps.usuarios.views import LoginView
+from apps.usuarios.views import LoginView, TokenSessaoView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,6 +9,7 @@ urlpatterns = [
     # autenticação
     path('auth/login',   LoginView.as_view(),   name='login'),
     path('auth/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('auth/token-sessao/', TokenSessaoView.as_view(), name='token_sessao'),
 
     # API REST
     path('clientes/', include('apps.clientes.urls')),

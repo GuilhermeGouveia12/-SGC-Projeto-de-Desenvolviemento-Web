@@ -126,13 +126,12 @@ Todas as rotas (exceto `/auth/login`) exigem `Authorization: Bearer <token>`.
 ## 7. Testes
 
 ```bash
-python manage.py test apps.clientes apps.produtos apps.vendas
+python manage.py test
 ```
 
 Os testes cobrem: criação, validação de CPF duplicado, CPF inválido, preço negativo, estoque insuficiente, venda sem itens, atualização de estoque após venda e proteção de rotas sem autenticação.
 
 ---
-
 
 ## 8. Autores
 
@@ -140,7 +139,3 @@ Os testes cobrem: criação, validação de CPF duplicado, CPF inválido, preço
 - Arthur Grangeiro Botelho Henrique Tomaz
 
 Disciplina: Desenvolvimento Web
-
-## Documentação técnica
-
-Ver [docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md) para arquitetura, padrões de projeto, justificativas técnicas e endpoints.
