@@ -133,9 +133,14 @@ Os testes cobrem: criação, validação de CPF duplicado, CPF inválido, preço
 
 ---
 
+
 ## 8. Autores
 
 - Guilherme Gouveia Dalla Mutta
 - Arthur Grangeiro Botelho Henrique Tomaz
 
 Disciplina: Desenvolvimento Web
+
+## Documentação técnica
+
+Ver [docs/DOCUMENTACAO.md](docs/DOCUMENTACAO.md) para arquitetura, padrões de projeto, justificativas técnicas e endpoints.
