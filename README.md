@@ -67,7 +67,7 @@ Interface Web (Templates Bootstrap)
 
 ---
 
-## 5. Como executar
+## 5. Como executar.
 
 ```bash
 # 1. Clonar o repositório
